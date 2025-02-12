@@ -1,0 +1,37 @@
+Para agregar un trigger de SQS DLQ en tu Lambda, sigue estos pasos en la consola de AWS:
+
+📌 Pasos para configurar una DLQ (SQS) como trigger en AWS Lambda
+
+1️⃣ Iniciar sesión en la consola de AWS
+	•	Ve a AWS Lambda.
+
+2️⃣ Seleccionar la función Lambda
+	•	En el panel de Lambda, busca y haz clic en tu función.
+
+3️⃣ Ir a la pestaña “Triggers” (Desencadenadores)
+	•	En la parte inferior de la página de configuración de Lambda, verás una pestaña llamada “Triggers”.
+
+4️⃣ Agregar un nuevo trigger
+	•	Haz clic en el botón “Agregar trigger”.
+
+5️⃣ Seleccionar SQS como fuente del trigger
+	•	En la lista de servicios, elige Amazon SQS.
+	•	En “SQS queue”, selecciona la ARN de la DLQ (la cola donde se guardan los mensajes fallidos).
+
+6️⃣ Configurar los parámetros
+	•	Batch size: Indica cuántos mensajes procesará Lambda al mismo tiempo (ejemplo: 5).
+	•	Habilitar trigger: Asegúrate de que esté activado.
+
+7️⃣ Guardar los cambios
+	•	Haz clic en “Agregar” y listo.
+
+✅ Ahora, tu Lambda se ejecutará automáticamente cuando haya mensajes en la DLQ (SQS).
+
+🚀 ¿Quieres probarlo? Puedes enviar un mensaje de prueba a la DLQ con AWS CLI:
+
+aws sqs send-message --queue-url https://sqs.us-east-1.amazonaws.com/123456789012/MiDLQ \
+                     --message-body '{"evento":"fallido"}'
+
+Tu Lambda debería recibirlo y procesarlo automáticamente.
+
+🔹 ¿Necesitas ayuda con la configuración?
