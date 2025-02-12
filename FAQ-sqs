@@ -1,0 +1,96 @@
+📌 FAQ - Preguntas Frecuentes sobre DLQ (Dead Letter Queue) en AWS Lambda
+
+1️⃣ ¿Es obligatorio usar una DLQ en AWS Lambda?
+
+No, no es obligatorio, pero puede ser útil en ciertos escenarios.
+	•	Si tu Lambda procesa eventos asíncronos (como S3, SNS, EventBridge) y no quieres perder datos en caso de fallo, sí es recomendable.
+	•	Si tu Lambda es síncrona (por ejemplo, invocada desde API Gateway o AWS SDK), los errores se devuelven al cliente y una DLQ no es necesaria.
+
+2️⃣ ¿Qué tipo de colas se pueden usar como DLQ en Lambda?
+
+Puedes usar:
+✅ Amazon SQS (Simple Queue Service) → Guarda eventos fallidos para reprocesarlos después.
+✅ Amazon SNS (Simple Notification Service) → Envía notificaciones cuando una Lambda falla.
+
+3️⃣ ¿Lambda reprocesa automáticamente los eventos de la DLQ?
+
+No, Lambda NO reprocesa automáticamente los eventos almacenados en la DLQ.
+	•	Si configuras una SQS DLQ, los mensajes fallidos quedarán en la cola, pero debes configurar otra Lambda para leerlos y reprocesarlos manualmente.
+
+🔹 Solución: Agregar un Trigger de SQS a una Lambda que vuelva a ejecutar los eventos fallidos.
+
+4️⃣ ¿Cuántos reintentos hace Lambda antes de enviar un evento a la DLQ?
+	•	Si la Lambda se ejecuta de manera asíncrona (por S3, EventBridge, SNS, etc.), AWS reintenta automáticamente 2 veces antes de enviar el evento fallido a la DLQ.
+	•	Si es una invocación síncrona, Lambda no hace reintentos y devuelve el error directamente.
+
+5️⃣ ¿Cuál es la diferencia entre una DLQ y Lambda Destinations?
+
+Característica	DLQ (SQS/SNS)	Lambda Destinations
+¿Guarda eventos fallidos?	✅ Sí	✅ Sí
+¿Ejecuta otra acción después de un fallo?	❌ No (solo almacena mensajes)	✅ Sí (puede ejecutar otra Lambda o enviar a EventBridge)
+¿Requiere configuración manual para reprocesar?	✅ Sí	❌ No (se gestiona automáticamente)
+Casos de uso	Guardar mensajes para análisis y reprocesar manualmente	Disparar otra acción automática en caso de fallo
+
+🔹 Usa DLQ si necesitas guardar y revisar eventos fallidos.
+🔹 Usa Lambda Destinations si quieres que otro servicio actúe automáticamente después de un fallo.
+
+6️⃣ ¿Cómo recibir una alerta si mi Lambda falla?
+
+Puedes configurar una alarma en CloudWatch para detectar errores y enviarte un email/SMS con SNS:
+	1.	Ve a la consola de CloudWatch → Alarmas → Crear Alarma.
+	2.	Selecciona la métrica “Errors” de tu Lambda.
+	3.	Crea una condición para cuando los errores sean > 0.
+	4.	Añade una acción con SNS para recibir notificaciones.
+
+7️⃣ ¿Cómo agregar una DLQ a una Lambda desde AWS CLI?
+
+Puedes agregar una SQS DLQ a tu Lambda con este comando:
+
+aws lambda update-function-configuration \
+  --function-name MiLambda \
+  --dead-letter-config TargetArn=arn:aws:sqs:us-east-1:123456789012:MiDLQ
+
+8️⃣ ¿Cómo procesar los mensajes de la DLQ automáticamente?
+
+Debes crear una Lambda que tenga la DLQ como trigger y vuelva a ejecutar los eventos fallidos:
+
+import boto3
+import json
+
+lambda_client = boto3.client('lambda')
+sqs_client = boto3.client('sqs')
+
+DLQ_URL = "https://sqs.us-east-1.amazonaws.com/123456789012/MiDLQ"
+
+def lambda_handler(event, context):
+    messages = sqs_client.receive_message(QueueUrl=DLQ_URL, MaxNumberOfMessages=5, WaitTimeSeconds=10)
+
+    if "Messages" in messages:
+        for message in messages["Messages"]:
+            event_data = json.loads(message["Body"])
+
+            lambda_client.invoke(
+                FunctionName="MiLambdaOriginal",
+                InvocationType="Event",
+                Payload=json.dumps(event_data)
+            )
+
+            sqs_client.delete_message(QueueUrl=DLQ_URL, ReceiptHandle=message["ReceiptHandle"])
+
+    return "Reprocesado"
+
+9️⃣ ¿Dónde se configuran los triggers en Lambda?
+	1.	Ve a la consola de AWS Lambda.
+	2.	Selecciona la función Lambda.
+	3.	Ve a la pestaña “Triggers” (Desencadenadores).
+	4.	Haz clic en “Agregar trigger” y selecciona SQS.
+	5.	Elige la DLQ (SQS) como fuente de eventos.
+
+🔟 ¿Cuándo NO es necesario configurar una DLQ en Lambda?
+
+No necesitas una DLQ si:
+❌ Tu Lambda se invoca de manera síncrona (API Gateway, AWS SDK).
+❌ Puedes volver a ejecutar la Lambda manualmente sin perder información.
+❌ Prefieres usar CloudWatch Logs + Alarmas para monitorear errores en lugar de almacenar eventos en una SQS.
+
+🔹 ¿Tienes más preguntas o necesitas ayuda con la configuración? 🚀
