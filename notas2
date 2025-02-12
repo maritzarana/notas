@@ -1,0 +1,56 @@
+📌 ¿Es necesario tener una DLQ (SQS) para las Lambdas?
+
+No, no es obligatorio configurar una SQS DLQ para una Lambda, pero en algunos casos es recomendado para manejar errores y evitar la pérdida de eventos.
+
+✅ Cuándo SÍ necesitas una DLQ en Lambda
+
+1️⃣ Si tu Lambda recibe eventos asíncronos
+	•	Ejemplo: Lambdas activadas por S3, EventBridge o SNS.
+	•	AWS Lambda solo reintenta automáticamente 2 veces antes de descartar el evento.
+	•	Con una DLQ, los eventos fallidos no se pierden, sino que se almacenan en SQS para revisión.
+
+2️⃣ Si el evento es crítico y no puede perderse
+	•	Ejemplo: Procesamiento de pagos, generación de reportes financieros, registros de usuarios.
+	•	Una DLQ asegura que los eventos fallidos sean recuperables y puedan procesarse más tarde.
+
+3️⃣ Si la Lambda depende de servicios externos
+	•	Si tu Lambda llama a una API, base de datos o servicio externo que podría fallar, una DLQ permite manejar los eventos fallidos sin perderlos.
+
+4️⃣ Para monitoreo y depuración de errores
+	•	Puedes analizar los mensajes en la DLQ para identificar patrones de fallos y mejorar la lógica de la Lambda.
+
+❌ Cuándo NO necesitas una DLQ en Lambda
+
+1️⃣ Si la Lambda es síncrona
+	•	Si se invoca desde API Gateway, AWS SDK o directamente desde otra Lambda, el error se devuelve al cliente y no necesita DLQ.
+
+2️⃣ Si puedes volver a ejecutar la Lambda manualmente
+	•	Para tareas que pueden ejecutarse de nuevo sin perder datos, una DLQ no es necesaria.
+
+3️⃣ Si usas otro método de monitoreo (CloudWatch Logs + Alarmas)
+	•	Si solo necesitas saber cuándo una Lambda falla, es mejor configurar una alarma en CloudWatch que usar una DLQ.
+
+📌 Alternativa sin DLQ: Usar Lambda Destinations
+
+AWS ofrece Lambda Destinations, una alternativa moderna a DLQ.
+
+✅ En vez de enviar eventos fallidos a SQS, puedes configurarlo para:
+	•	Enviar los eventos fallidos a una Lambda de recuperación.
+	•	Notificar errores a EventBridge o SNS.
+
+🔹 Cuándo usar Lambda Destinations en vez de DLQ:
+	•	Cuando quieres ejecutar automáticamente otra acción después de un fallo, en lugar de solo guardar el mensaje en SQS.
+
+🔹 Cómo configurarlo en AWS CLI:
+
+aws lambda update-function-configuration \
+  --function-name MiFuncionLambda \
+  --destination-config '{"OnFailure":{"Destination": "arn:aws:sns:us-east-1:123456789012:MiAlertaSNS"}}'
+
+📌 Conclusión: ¿Debes usar una SQS DLQ en Lambda?
+
+🔴 No es obligatorio, pero sí útil en casos donde la Lambda es asíncrona y los eventos no pueden perderse.
+✅ Si la Lambda procesa eventos asíncronos y críticos, DLQ es una buena práctica.
+✅ Si solo necesitas alertas, usa CloudWatch Logs + Alarma o Lambda Destinations en vez de una DLQ.
+
+🚀 ¿Necesitas ayuda para configurar DLQ o Destinations en tu Lambda?
