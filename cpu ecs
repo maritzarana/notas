@@ -1,0 +1,32 @@
+Para saber cuánta CPU está reservada para tu servicio ECS en tu proyecto, sigue estos pasos dependiendo de si usas Fargate o EC2:
+
+Si usas AWS Fargate
+	1.	Ve a la consola de AWS ECS: ECS Console
+	2.	Selecciona tu cluster.
+	3.	Selecciona tu servicio dentro del cluster.
+	4.	En la pestaña Tasks, haz clic en una tarea en ejecución.
+	5.	Busca la sección Task Definition y ábrela.
+	6.	Dentro de la definición de la tarea, en la sección de Container Definitions, busca el valor de CPU.
+
+	Nota: En Fargate, la CPU se especifica en unidades (256, 512, 1024, etc.), donde 1024 unidades = 1 vCPU.
+
+Si usas instancias EC2
+	1.	Ve a la consola de AWS ECS.
+	2.	Selecciona tu cluster.
+	3.	Selecciona la pestaña “ECS Instances” (si está disponible).
+	4.	Revisa el uso de CPU en cada instancia.
+	5.	También puedes revisar la definición de tarea como en Fargate para ver cuánta CPU se ha asignado a cada contenedor.
+
+Usando AWS CLI
+
+Puedes obtener la definición de la tarea y ver cuánta CPU tiene asignada:
+
+aws ecs describe-task-definition --task-definition <nombre-de-la-tarea> --query "taskDefinition.containerDefinitions[*].cpu"
+
+Si necesitas ver cuánta CPU está usando en tiempo real:
+
+aws ecs describe-services --cluster <nombre-del-cluster> --services <nombre-del-servicio> --query "services[*].desiredCount"
+
+o usa CloudWatch Metrics para monitorear el consumo real.
+
+¿Estás usando Fargate o EC2? Puedo darte comandos más específicos según tu caso.
