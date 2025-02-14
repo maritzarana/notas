@@ -1,0 +1,97 @@
+FAQ: Amazon VPC (Virtual Private Cloud) en AWS
+
+1. ¿Qué es una VPC en AWS?
+
+Una VPC (Virtual Private Cloud) es una red privada en la nube de AWS donde puedes lanzar y administrar recursos como instancias EC2, RDS, Lambda, ALB, entre otros, con control total sobre direcciones IP, subnets, rutas y seguridad.
+
+2. ¿Para qué sirve una VPC?
+
+✅ Aislar recursos dentro de una red privada en AWS.
+✅ Controlar acceso con reglas de seguridad (Security Groups y NACLs).
+✅ Conectar con redes locales mediante VPN o AWS Direct Connect.
+✅ Configurar redes escalables con balanceadores de carga y auto scaling.
+
+3. ¿Cuál es la diferencia entre una Subnet y una AZ?
+	•	Subnet: Es una división lógica dentro de una VPC.
+	•	Availability Zone (AZ): Es un centro de datos físico dentro de una región de AWS.
+📌 Cada Subnet solo puede estar en UNA AZ, pero una AZ puede tener múltiples Subnets.
+
+4. ¿Cuáles son los componentes principales de una VPC?
+	•	CIDR Block → Define el rango de direcciones IP privadas (Ejemplo: 10.0.0.0/16).
+	•	Subnets → Pueden ser públicas o privadas, dependiendo del acceso a Internet.
+	•	Route Tables → Controlan el enrutamiento del tráfico dentro de la VPC.
+	•	Internet Gateway (IGW) → Permite salida a Internet desde las Subnets Públicas.
+	•	NAT Gateway → Permite a las Subnets Privadas acceder a Internet sin ser expuestas.
+	•	Security Groups (SG) → Controlan el tráfico a nivel de instancia (firewall).
+	•	Network ACLs (NACLs) → Controlan reglas de tráfico a nivel de subnet.
+	•	VPC Peering → Conexión privada entre dos VPCs.
+	•	VPN / Direct Connect → Para conectar la VPC con redes locales o centros de datos.
+
+5. ¿Qué tipos de Subnets existen en una VPC?
+
+🔹 Subnet Pública → Tiene acceso a Internet mediante un Internet Gateway (IGW).
+🔹 Subnet Privada → No tiene acceso directo a Internet; usa un NAT Gateway.
+🔹 Subnet Aislada → No tiene acceso ni a Internet ni a otras redes externas.
+
+6. ¿Cómo saber qué Subnets están en cada AZ?
+
+Desde la consola AWS:
+
+1️⃣ Ir a VPC > Subnets.
+2️⃣ Ver la columna Availability Zone.
+
+Desde AWS CLI:
+
+aws ec2 describe-subnets --query "Subnets[*].[SubnetId, AvailabilityZone]" --output table
+
+7. ¿Cómo verificar qué AZs están disponibles en una región?
+
+aws ec2 describe-availability-zones --region us-east-1
+
+8. ¿Qué es una Route Table en VPC?
+
+Una Route Table define las reglas de enrutamiento dentro de la VPC, determinando cómo viaja el tráfico entre Subnets, Internet y otras redes conectadas.
+
+9. ¿Cuándo usar un NAT Gateway vs. un Internet Gateway?
+	•	Internet Gateway (IGW) → Se usa para que las Subnets Públicas accedan a Internet.
+	•	NAT Gateway → Se usa para que las Subnets Privadas accedan a Internet sin ser expuestas.
+
+10. ¿Cómo conectar una VPC con mi red local?
+
+Existen dos opciones:
+🔹 AWS VPN → Conexión segura sobre Internet.
+🔹 AWS Direct Connect → Conexión dedicada de alta velocidad.
+
+11. ¿Cómo se comunican dos VPCs en AWS?
+
+📌 Opciones:
+🔹 VPC Peering → Conexión privada entre dos VPCs dentro de AWS.
+🔹 AWS Transit Gateway → Conexión centralizada para múltiples VPCs y redes on-premises.
+
+12. ¿Qué es mejor: Security Groups o NACLs?
+
+🔹 Security Groups (SGs) → Reglas de firewall a nivel de instancia (más flexibles).
+🔹 NACLs (Network ACLs) → Reglas de seguridad a nivel de subnet (más restrictivas).
+
+13. ¿Cómo se configura una VPC en AWS?
+
+1️⃣ Crear una VPC y definir el CIDR Block.
+2️⃣ Crear Subnets Públicas y Privadas.
+3️⃣ Configurar Route Tables.
+4️⃣ Agregar Internet Gateway (para Subnets Públicas).
+5️⃣ Configurar NAT Gateway (para Subnets Privadas si necesitan salir a Internet).
+6️⃣ Ajustar Security Groups y NACLs según los permisos necesarios.
+
+14. ¿Puedo modificar el CIDR de una VPC después de creada?
+
+📌 Sí, pero con restricciones. AWS permite ampliar un CIDR Block dentro de una VPC, pero no reducirlo ni eliminar rangos existentes.
+
+15. ¿Qué pasa si elimino una VPC?
+
+🚨 Si eliminas una VPC, todos los recursos asociados (EC2, Subnets, Route Tables, IGW, etc.) también se eliminan de forma irreversible.
+
+📌 Conclusión
+
+AWS VPC es la base de la infraestructura en la nube, permitiendo crear redes seguras, escalables y personalizables para aplicaciones, bases de datos y microservicios.
+
+¿Necesitas ayuda para diseñar o configurar tu VPC en AWS? 🚀
