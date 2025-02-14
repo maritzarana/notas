@@ -1,0 +1,56 @@
+FAQ: Subnets y Availability Zones (AZs) en AWS
+
+1. ¿Qué es una Availability Zone (AZ) en AWS?
+
+Una Availability Zone (AZ) es un centro de datos físicamente separado dentro de una región de AWS. Cada región de AWS tiene varias AZs diseñadas para mejorar la disponibilidad y la tolerancia a fallos.
+
+2. ¿Cuántas Availability Zones tiene una región de AWS?
+
+Cada región tiene al menos dos AZs, pero algunas pueden tener hasta seis (por ejemplo, us-east-1 tiene seis AZs: us-east-1a, us-east-1b, us-east-1c, etc.).
+
+3. ¿Qué es una Subnet en AWS?
+
+Una Subnet (subred) es una división lógica dentro de una VPC que permite organizar recursos dentro de una Availability Zone.
+
+4. ¿Cuál es la relación entre una Subnet y una AZ?
+	•	Cada Subnet está asociada a una sola AZ.
+	•	Una AZ puede tener múltiples Subnets.
+
+5. ¿Qué tipos de Subnets existen en AWS?
+	1.	Subnet Pública → Tiene acceso a Internet a través de un Internet Gateway (IGW).
+	2.	Subnet Privada → No tiene acceso directo a Internet; usa un NAT Gateway para conectarse a Internet.
+	3.	Subnet Aislada → No tiene acceso ni a Internet ni a otros recursos fuera de la VPC.
+
+6. ¿Cómo puedo saber en qué AZ está mi Subnet?
+
+En la consola de AWS:
+	1.	Ir a VPC > Subnets.
+	2.	Revisar la columna Availability Zone.
+
+Con AWS CLI:
+
+aws ec2 describe-subnets --query "Subnets[*].[SubnetId, AvailabilityZone]" --output table
+
+7. ¿Cómo saber cuántas AZs hay en una región específica?
+
+aws ec2 describe-availability-zones --region us-east-1
+
+8. ¿Por qué es importante usar múltiples AZs?
+
+Distribuir cargas en varias AZs mejora la alta disponibilidad y tolerancia a fallos. Si una AZ falla, los recursos en otra AZ seguirán funcionando.
+
+9. ¿Cómo puedo verificar si mi ECS/EKS está corriendo en múltiples AZs?
+
+Para ECS:
+
+aws ecs describe-container-instances --cluster <nombre-del-cluster>
+
+Para EKS:
+
+kubectl get nodes -o wide
+
+10. ¿Cómo distribuir Subnets en múltiples AZs?
+
+Al crear una VPC, define subnets en diferentes AZs dentro de la misma región y configura servicios como ECS, EKS, RDS o Auto Scaling Groups para usarlas.
+
+¿Necesitas ayuda para configurar Subnets o revisar tu infraestructura en AWS?
