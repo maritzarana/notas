@@ -1,0 +1,100 @@
+FAQ - Rotación de Access Keys en AWS
+
+1. ¿Qué significa “User access key must be rotated at least once a year” en AWS?
+
+Este mensaje significa que las claves de acceso (Access Keys) de IAM deben cambiarse al menos una vez al año para mejorar la seguridad y reducir el riesgo de accesos no autorizados.
+
+2. ¿Qué es una Access Key en AWS?
+
+Una Access Key es un par de credenciales que permite autenticarse en AWS sin usar la consola. Está compuesta por:
+	•	Access Key ID (Pública)
+	•	Secret Access Key (Privada y secreta)
+
+Se usa en AWS CLI, SDKs y API REST para interactuar con los servicios de AWS.
+
+3. ¿Por qué AWS recomienda rotar las Access Keys?
+
+AWS recomienda rotar las claves por motivos de seguridad:
+	•	Evitar que una clave comprometida se use indefinidamente.
+	•	Reducir el riesgo de accesos no autorizados.
+	•	Cumplir con buenas prácticas de seguridad y auditorías.
+
+4. ¿Cómo puedo verificar cuándo se creó una Access Key?
+
+Puedes verificar la fecha de creación con AWS CLI:
+
+aws iam list-access-keys --user-name my-user
+
+O en la consola de AWS:
+	1.	Ir a IAM → Usuarios → Seleccionar el usuario.
+	2.	Ir a Credenciales de seguridad → Revisar la fecha de creación.
+
+5. ¿Cómo rotar una Access Key en AWS?
+
+Para cambiar una clave sin afectar el acceso, sigue estos pasos:
+
+1️⃣ Crear una nueva Access Key
+	•	En la Consola de AWS → IAM → Usuarios → Credenciales de seguridad.
+	•	Hacer clic en Crear clave de acceso y guardar la nueva Access Key ID y Secret Access Key.
+
+2️⃣ Actualizar la nueva clave en los sistemas
+	•	Para AWS CLI:
+
+aws configure
+
+Luego, ingresar la nueva clave.
+
+	•	Para aplicaciones o servidores, actualizar en variables de entorno o archivos de configuración.
+
+3️⃣ Desactivar la clave antigua
+	•	En IAM, desactivar la clave vieja y esperar unos días para verificar que la nueva funciona.
+
+4️⃣ Eliminar la clave antigua
+	•	Si la nueva clave funciona correctamente, eliminar la clave anterior.
+
+6. ¿Cómo eliminar una Access Key con AWS CLI?
+
+Si ya verificaste que la nueva clave funciona, puedes eliminar la vieja con:
+
+aws iam delete-access-key --user-name my-user --access-key-id OLD_ACCESS_KEY_ID
+
+7. ¿Se pueden usar roles en lugar de Access Keys?
+
+Sí. AWS IAM Roles son una mejor alternativa a las Access Keys para muchas aplicaciones porque:
+✅ No requieren claves estáticas.
+✅ Pueden ser asignados dinámicamente a instancias EC2, Lambda y otros servicios.
+✅ Mejoran la seguridad al usar AWS STS (Temporary Security Credentials).
+
+Si es posible, reemplaza Access Keys con Roles de IAM.
+
+8. ¿Cómo automatizar la rotación de Access Keys?
+
+Puedes automatizar la rotación usando AWS Lambda y CloudWatch:
+	1.	Crear un CloudWatch Event que detecte claves antiguas.
+	2.	Ejecutar una Lambda que cree una nueva clave y notifique al equipo.
+	3.	Enviar alertas a SNS o Slack cuando una clave necesite rotación.
+
+También puedes usar AWS Secrets Manager para manejar credenciales de forma segura.
+
+9. ¿Qué pasa si elimino una Access Key antes de actualizar la nueva?
+
+Si eliminas una clave antes de actualizar la nueva en todas las aplicaciones, los servicios que la usaban dejarán de funcionar.
+✅ Solución: Siempre crea y prueba la nueva clave antes de eliminar la anterior.
+
+10. ¿Puedo desactivar temporalmente una Access Key en lugar de eliminarla?
+
+Sí. En AWS IAM, puedes desactivar una Access Key sin eliminarla para evitar su uso temporalmente.
+
+11. ¿Dónde puedo ver todas mis Access Keys activas?
+
+En AWS Console → IAM → Usuarios → Credenciales de seguridad, o con este comando:
+
+aws iam list-access-keys
+
+📌 Conclusión
+	•	Rotar las Access Keys al menos una vez al año es una práctica recomendada de seguridad.
+	•	Usar IAM Roles en lugar de Access Keys cuando sea posible.
+	•	Automatizar la rotación con AWS Lambda y CloudWatch.
+	•	Nunca elimines una clave sin probar la nueva primero.
+
+🚀 ¿Necesitas ayuda para implementar una política de rotación automática?
