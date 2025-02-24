@@ -1,0 +1,50 @@
+# FAQ: Cálculo del SLO y Umbrales de Aviso en AWS con API Gateway
+
+## 1. ¿Qué es un SLO (Service Level Objective) en AWS?
+Un SLO (Service Level Objective) es un objetivo medible de desempeño o disponibilidad para un servicio en AWS. Especifica las expectativas de rendimiento, como la disponibilidad del servicio, la latencia máxima permitida o el porcentaje aceptable de errores.
+
+## 2. ¿Cómo se calcula un SLO con API Gateway en AWS?
+El SLO se puede calcular utilizando métricas proporcionadas por Amazon CloudWatch. Ejemplos comunes de métricas incluyen:
+- **Disponibilidad:** (Solicitudes totales - Errores 5xx) / Solicitudes totales * 100
+- **Latencia:** Percentil de latencia (p95) para garantizar un tiempo de respuesta aceptable.
+- **Errores:** Porcentaje de errores HTTP 4xx o 5xx en comparación con las solicitudes totales.
+
+## 3. ¿Qué es un umbral de aviso en el contexto del SLO?
+El umbral de aviso es un valor predefinido para una métrica que activa una alerta cuando se alcanza. Ayuda a identificar posibles problemas antes de que afecten el cumplimiento del SLO. Por ejemplo, si el SLO de disponibilidad es del 99.9%, se puede establecer un umbral de aviso en el 99.95%.
+
+## 4. ¿Cómo configuro un umbral de aviso en AWS?
+Puedes configurar un umbral de aviso en **Amazon CloudWatch**:
+1. Accede a **CloudWatch** > **Metrics**.
+2. Selecciona la métrica relevante, como **Latency** o **5xxError**.
+3. Crea una alarma con el umbral deseado.
+4. Configura notificaciones mediante **Amazon SNS** (Simple Notification Service).
+
+## 5. ¿Cuál es la diferencia entre un SLO y un umbral de aviso?
+- **SLO:** Es el objetivo general del servicio (e.g., 99.9% de disponibilidad).
+- **Umbral de aviso:** Es un punto previo al incumplimiento del SLO, donde se activa una alerta para permitir acciones preventivas.
+
+## 6. ¿Puedo automatizar acciones cuando se alcanza un umbral de aviso?
+Sí, puedes utilizar **AWS CloudWatch Alarms** con **AWS Lambda** o **Step Functions** para desencadenar acciones automáticas, como escalar instancias o reiniciar servicios.
+
+## 7. ¿Qué herramientas adicionales puedo utilizar para monitorear mi SLO con API Gateway?
+Además de **CloudWatch**, puedes utilizar:
+- **AWS X-Ray:** Para rastreo y análisis de solicitudes.
+- **AWS CloudTrail:** Para auditoría y monitoreo de eventos.
+- **Third-party tools:** Herramientas externas como Datadog, New Relic o Grafana.
+
+## 8. ¿Cómo puedo visualizar el rendimiento de mi API en tiempo real?
+Crea un **dashboard** en **CloudWatch** con las métricas clave (e.g., Latencia, Errores, Disponibilidad) para tener una vista en tiempo real del rendimiento de tu API.
+
+## 9. ¿Qué debo hacer si mi servicio no cumple con el SLO?
+1. Revisa las métricas en **CloudWatch** para identificar la causa raíz.
+2. Analiza los registros de **API Gateway** y **AWS X-Ray**.
+3. Implementa correcciones (e.g., escalado, optimización de consultas, mejora de integraciones backend).
+4. Ajusta los umbrales de aviso para detectar problemas más temprano.
+
+## 10. ¿Dónde puedo encontrar más información?
+- **Documentación de AWS API Gateway:** https://docs.aws.amazon.com/apigateway
+- **Documentación de Amazon CloudWatch:** https://docs.aws.amazon.com/cloudwatch
+- **Guía de mejores prácticas para SLOs:** https://sre.google/sre-book/service-level-objectives
+
+¿Tienes alguna otra pregunta específica sobre SLOs o configuración en AWS?
+
