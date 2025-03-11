@@ -62,4 +62,11 @@ Si el versionado está activado en el bucket, puedes:
 
 8. ¿Cómo verificar qué objetos están sujetos a reglas de ciclo de vida?
 
-Puedes revisar las reglas en la Consola de AWS en la pestaña Management > Lifecycle Rules o usar AWS CLI:
+		Puedes revisar las reglas en la Consola de AWS en la pestaña Management > Lifecycle Rules o usar AWS  momento desde la Consola de AWS o mediante la API/CLI.
+
+⸻
+
+10. ¿El ciclo de vida tiene costo adicional?
+
+No hay costo por crear reglas de ciclo de vida, pero las transiciones de almacenamiento y la recuperación de datos desde Glacier tienen costos adicionales.
+
