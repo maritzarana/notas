@@ -1,0 +1,65 @@
+FAQ: Configuración del Lifecycle en un Bucket S3 en AWS
+
+1. ¿Qué es el ciclo de vida en S3?
+
+El ciclo de vida en S3 es una configuración que permite automatizar la transición y eliminación de objetos en un bucket. Se usa para reducir costos y optimizar el almacenamiento moviendo datos a clases más económicas o eliminando archivos innecesarios.
+
+⸻
+
+2. ¿Cómo configuro el ciclo de vida en un bucket S3?
+
+Puedes configurar el ciclo de vida desde la Consola de AWS, AWS CLI o mediante Terraform/CloudFormation.
+	•	En la Consola de AWS, ve a S3 > Management > Lifecycle Rules y crea una nueva regla.
+	•	Define condiciones basadas en la antigüedad del objeto o prefijos específicos.
+	•	Configura transiciones a otras clases de almacenamiento o reglas de expiración.
+
+⸻
+
+3. ¿Cuáles son las clases de almacenamiento compatibles con el ciclo de vida?
+
+Las reglas de ciclo de vida permiten mover objetos entre las siguientes clases:
+	•	S3 Standard (Uso frecuente)
+	•	S3 Intelligent-Tiering (Ajusta el almacenamiento automáticamente)
+	•	S3 Standard-IA (Acceso infrecuente, menor costo)
+	•	S3 One Zone-IA (Acceso infrecuente en una sola AZ)
+	•	S3 Glacier (Archivado de largo plazo con recuperación lenta)
+	•	S3 Glacier Deep Archive (Archivado de datos que rara vez se usan)
+
+⸻
+
+4. ¿Cuáles son los beneficios del ciclo de vida en S3?
+
+✔ Ahorro de costos al mover datos a clases de almacenamiento más baratas.
+✔ Automatización en la gestión del almacenamiento sin intervención manual.
+✔ Cumplimiento normativo, asegurando la retención o eliminación de datos según requisitos.
+✔ Optimización del rendimiento, eliminando datos obsoletos.
+
+⸻
+
+5. ¿Cómo funciona la transición de almacenamiento?
+
+Las reglas de ciclo de vida pueden mover automáticamente objetos a clases más económicas según su antigüedad. Ejemplo:
+	•	Después de 30 días sin acceso, mover a S3 Infrequent Access.
+	•	Después de 90 días, mover a S3 Glacier.
+	•	Después de 365 días, mover a S3 Glacier Deep Archive.
+
+⸻
+
+6. ¿Puedo eliminar objetos automáticamente con el ciclo de vida?
+
+Sí. Puedes configurar una regla de expiración para eliminar objetos después de un tiempo determinado.
+Ejemplo: “Eliminar archivos después de 1 año”.
+
+⸻
+
+7. ¿Cómo afecta el ciclo de vida si el bucket tiene versionado habilitado?
+
+Si el versionado está activado en el bucket, puedes:
+	•	Eliminar versiones antiguas automáticamente.
+	•	Mover versiones antiguas a S3 Glacier en lugar de eliminarlas.
+
+⸻
+
+8. ¿Cómo verificar qué objetos están sujetos a reglas de ciclo de vida?
+
+Puedes revisar las reglas en la Consola de AWS en la pestaña Management > Lifecycle Rules o usar AWS CLI:
