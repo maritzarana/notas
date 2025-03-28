@@ -1,0 +1,144 @@
+¡Buena pregunta! Vamos a hacer el cálculo paso a paso para que se entienda bien.
+
+Configuración:
+	•	SLO: 99.9% del tiempo la latencia debe estar por debajo de 3000ms.
+	•	Período de evaluación: 1 día (24 horas = 86,400 segundos).
+	•	Queremos saber cuánto tiempo puede estar la latencia por encima de 3000ms sin romper el SLO.
+
+⸻
+
+Paso 1: ¿Qué representa el 0.1% de error?
+
+Tu margen de error permitido es:
+
+100% - 99.9% = 0.1%
+
+Eso significa que solo puedes fallar el 0.1% del tiempo cada día.
+
+⸻
+
+Paso 2: Calcular cuánto tiempo representa ese 0.1% de 1 día:
+	•	0.1% de 24 horas =
+86,400 segundos * 0.001 = 86.4 segundos
+
+⸻
+
+Resultado:
+
+Puedes tener hasta 86.4 segundos por día en los que tu API Gateway tenga una latencia mayor a 3000 ms sin romper el SLO.
+
+⸻
+
+En resumen:
+
+Si en un día, más de 86.4 segundos de las peticiones tienen una latencia mayor a 3000ms, entonces rompes el SLO de ese día.
+
+
+⸻
+
+Supuestos:
+	•	SLO: 99.9% de las solicitudes deben tener latencia menor a 3000 ms.
+	•	Periodo: 1 mes (supongamos 30 días)
+	•	Cada día tiene 86,400 segundos
+→ 30 días = 2,592,000 segundos en total
+
+⸻
+
+¿Cuánto es el 0.1% de ese mes?
+
+0.1% de 2,592,000 segundos =
+2,592,000 * 0.001 = 2,592 segundos
+
+⸻
+
+Resultado:
+
+Puedes tener hasta 2,592 segundos (aproximadamente 43 minutos y 12 segundos) en todo el mes donde tu latencia supere los 3000 ms sin romper el SLO.
+
+⸻
+
+En resumen:
+
+Si en el transcurso del mes, tu API tiene más de 43 minutos y 12 segundos con una latencia mayor a 3000 ms, entonces rompes el SLO del mes.
+
+
+⸻
+
+Supuestos:
+	•	SLO: 99.9% de las solicitudes deben tener latencia menor a 3000 ms.
+	•	Periodo: 1 mes (supongamos 30 días)
+	•	Cada día tiene 86,400 segundos
+→ 30 días = 2,592,000 segundos en total
+
+⸻
+
+¿Cuánto es el 0.1% de ese mes?
+
+0.1% de 2,592,000 segundos =
+2,592,000 * 0.001 = 2,592 segundos
+
+⸻
+
+Resultado:
+
+Puedes tener hasta 2,592 segundos (aproximadamente 43 minutos y 12 segundos) en todo el mes donde tu latencia supere los 3000 ms sin romper el SLO.
+$$$&&
+
+¡Exactamente!
+Sí se suman. Cada vez que una petición supera los 3000 milisegundos, esa falla cuenta contra tu SLO.
+
+⸻
+
+¿Cómo se suman?
+
+Depende de cómo esté configurada la métrica en CloudWatch o tu sistema de monitoreo, pero en términos generales:
+	•	Cada solicitud que supere los 3000 ms cuenta como una falla.
+	•	Se acumulan todas las fallas (en tiempo o en cantidad) durante el mes.
+	•	Si el total de esas fallas supera el 0.1% del período (que en un mes son 2,592 segundos), rompes el SLO.
+
+⸻
+
+Dos formas comunes de medirlo:
+	1.	Por duración (tiempo acumulado de latencia alta):
+Ejemplo: si 100 peticiones tardan 10 segundos cada una por encima del límite →
+1000 segundos de incumplimiento acumulado
+	2.	Por número de peticiones:
+Si haces 1,000,000 peticiones en el mes, el 0.1% permitido son 1,000 peticiones.
+Si más de 1,000 tienen latencia mayor a 3000 ms → rompes el SLO.
+
+⸻
+
+¿Sabes si tu métrica se basa en tiempo acumulado o número de peticiones fallidas? Puedo ayudarte a interpretarlo mejor. También te puedo enseñar cómo explicarlo en inglés técnico para que lo uses en tu trabajo.
+
+
+⸻
+
+En resumen:
+
+Si en el transcurso del mes, tu API tiene más de 43 minutos y 12 segundos con una latencia mayor a 3000 ms, entonces rompes el SLO del mes.
+
+??$$$$$
+
+¡Muy buena observación! Y sí, es más fácil romper el SLO por día que por mes, por las siguientes razones:
+
+⸻
+
+1. Tienes menos margen de error en un día
+	•	En 1 día, el 0.1% permitido son 86.4 segundos de error.
+	•	En 1 mes (30 días), puedes acumular 2,592 segundos (43 minutos y 12 segundos) de error.
+
+Entonces:
+	•	Si tienes picos pequeños de latencia cada día, puede que rompas el SLO diario,
+pero aún mantengas el SLO mensual.
+
+⸻
+
+2. Más tolerancia a fallas distribuidas
+
+Con un SLO mensual, puedes tener un mal día (ej. con 200 segundos de errores), pero compensarlo con muchos días buenos sin errores.
+
+Con un SLO diario, no hay margen para compensar. Si te pasas ese día, ya rompiste el objetivo.
+
+⸻
+
+En resumen:
