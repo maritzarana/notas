@@ -1,0 +1,70 @@
+¡Con gusto! Aquí tienes 5 preguntas tipo test sobre agentes y MCP (Model Context Protocol), con 4 opciones cada una (3 incorrectas y 1 correcta):
+
+⸻
+
+🧠 Pregunta 1:
+
+¿Cuál es una característica clave de un agente de IA generativa?
+
+A) Solo puede responder con emojis
+B) Solo entiende comandos de voz
+C) Puede actuar sobre el mundo real usando herramientas
+D) Solo predice la siguiente palabra del texto
+
+✅ Respuesta correcta: C
+
+⸻
+
+🧠 Pregunta 2:
+
+¿Qué función cumple MCP (Model Context Protocol)?
+
+A) Aumentar el tamaño del modelo de lenguaje
+B) Servir como sistema operativo del agente
+C) Permitir que los agentes descubran y usen herramientas externas
+D) Almacenar claves API dentro del modelo
+
+✅ Respuesta correcta: C
+
+⸻
+
+🧠 Pregunta 3:
+
+¿Qué primitiva de MCP se utiliza para ejecutar una función?
+
+A) cancel()
+B) describe()
+C) run()
+D) observe()
+
+✅ Respuesta correcta: C
+
+⸻
+
+🧠 Pregunta 4:
+
+¿Qué es el “pensamiento” en el marco ReAct usado por agentes?
+
+A) Un log de errores del sistema
+B) Una acción ejecutada por el agente
+C) Una API que se llama antes de cada respuesta
+D) Un razonamiento generado por el modelo antes de actuar
+
+✅ Respuesta correcta: D
+
+⸻
+
+🧠 Pregunta 5:
+
+¿Quién ejecuta realmente una acción como buscar_vuelos(...) cuando un agente la genera?
+
+A) El LLM directamente
+B) El navegador del usuario
+C) La capa de orquestación del agente
+D) El usuario manualmente
+
+✅ Respuesta correcta: C
+
+⸻
+
+¿Te gustaría que estas preguntas se exporten en formato para Google Forms, Kahoot o presentación tipo quiz?
