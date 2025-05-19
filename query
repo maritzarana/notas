@@ -3,4 +3,10 @@ AzureDiagnostics
 | where ResourceProvider == "MICROSOFT.COGNITIVESERVICES"
 | project TimeGenerated, OperationName, RequestUri_s, ResponseCode_s, CallerIpAddress, CorrelationId
 | sort by TimeGenerated desc
-| take 50
+| take 5o
+
+AzureDiagnostics
+| where Category == "RequestResponse"
+| where ResourceProvider == "MICROSOFT.COGNITIVESERVICES"
+| sort by TimeGenerated desc
+| take 19
