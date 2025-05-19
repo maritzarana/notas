@@ -10,3 +10,8 @@ AzureDiagnostics
 | where ResourceProvider == "MICROSOFT.COGNITIVESERVICES"
 | sort by TimeGenerated desc
 | take 19
+
+
+AzureDiagnostics
+| sort by TimeGenerated desc
+| take 50
